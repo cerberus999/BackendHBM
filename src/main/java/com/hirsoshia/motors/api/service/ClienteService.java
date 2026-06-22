@@ -3,6 +3,7 @@ package com.hirsoshia.motors.api.service;
 import com.hirsoshia.motors.api.dto.request.ClienteRequest;
 import com.hirsoshia.motors.api.dto.response.ClienteResponse;
 import com.hirsoshia.motors.api.exception.ResourceNotFoundException;
+import com.hirsoshia.motors.api.mapper.ClienteMapper;
 import com.hirsoshia.motors.api.model.ventas.Cliente;
 import com.hirsoshia.motors.api.repository.ventas.ClienteRepository;
 import org.springframework.stereotype.Service;
@@ -13,19 +14,21 @@ import java.util.List;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final ClienteMapper clienteMapper;
 
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper) {
         this.clienteRepository = clienteRepository;
+        this.clienteMapper = clienteMapper;
     }
 
     public List<ClienteResponse> listarTodos() {
-        return clienteRepository.findAll().stream().map(this::toResponse).toList();
+        return clienteRepository.findAll().stream().map(clienteMapper::toDto).toList();
     }
 
     public ClienteResponse obtenerPorId(Long id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado: " + id));
-        return toResponse(cliente);
+        return clienteMapper.toDto(cliente);
     }
 
     public ClienteResponse crear(ClienteRequest request) {
@@ -37,7 +40,7 @@ public class ClienteService {
                 .email(request.email())
                 .direccion(request.direccion())
                 .build();
-        return toResponse(clienteRepository.save(cliente));
+        return clienteMapper.toDto(clienteRepository.save(cliente));
     }
 
     public ClienteResponse actualizar(Long id, ClienteRequest request) {
@@ -49,7 +52,7 @@ public class ClienteService {
         cliente.setTelefono(request.telefono());
         cliente.setEmail(request.email());
         cliente.setDireccion(request.direccion());
-        return toResponse(clienteRepository.save(cliente));
+        return clienteMapper.toDto(clienteRepository.save(cliente));
     }
 
     public void eliminar(Long id) {
@@ -57,17 +60,5 @@ public class ClienteService {
             throw new ResourceNotFoundException("Cliente no encontrado: " + id);
         }
         clienteRepository.deleteById(id);
-    }
-
-    private ClienteResponse toResponse(Cliente cliente) {
-        return new ClienteResponse(
-                cliente.getIdCliente(),
-                cliente.getNombre(),
-                cliente.getApellido(),
-                cliente.getCi(),
-                cliente.getTelefono(),
-                cliente.getEmail(),
-                cliente.getDireccion(),
-                cliente.getFechaRegistro());
     }
 }

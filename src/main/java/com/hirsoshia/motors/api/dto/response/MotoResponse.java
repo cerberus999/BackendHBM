@@ -16,5 +16,6 @@ public record MotoResponse(
         Integer stock,
         String color,
         String imagenUrl,
-        String estado
+        String estado,
+        MotoSpecs especificaciones
 ) {}

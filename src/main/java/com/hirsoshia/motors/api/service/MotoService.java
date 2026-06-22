@@ -3,6 +3,7 @@ package com.hirsoshia.motors.api.service;
 import com.hirsoshia.motors.api.dto.request.MotoRequest;
 import com.hirsoshia.motors.api.dto.response.MotoResponse;
 import com.hirsoshia.motors.api.exception.ResourceNotFoundException;
+import com.hirsoshia.motors.api.mapper.MotoMapper;
 import com.hirsoshia.motors.api.model.ventas.Distribuidor;
 import com.hirsoshia.motors.api.model.ventas.Moto;
 import com.hirsoshia.motors.api.repository.ventas.DistribuidorRepository;
@@ -16,24 +17,28 @@ public class MotoService {
 
     private final MotoRepository motoRepository;
     private final DistribuidorRepository distribuidorRepository;
+    private final MotoMapper motoMapper;
 
-    public MotoService(MotoRepository motoRepository, DistribuidorRepository distribuidorRepository) {
+    public MotoService(MotoRepository motoRepository,
+                       DistribuidorRepository distribuidorRepository,
+                       MotoMapper motoMapper) {
         this.motoRepository = motoRepository;
         this.distribuidorRepository = distribuidorRepository;
+        this.motoMapper = motoMapper;
     }
 
     public List<MotoResponse> listarTodas() {
-        return motoRepository.findAll().stream().map(this::toResponse).toList();
+        return motoRepository.findAll().stream().map(motoMapper::toDto).toList();
     }
 
     public List<MotoResponse> listarDisponibles() {
-        return motoRepository.findByEstado("disponible").stream().map(this::toResponse).toList();
+        return motoRepository.findByEstado("disponible").stream().map(motoMapper::toDto).toList();
     }
 
     public MotoResponse obtenerPorId(Long id) {
         Moto moto = motoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Moto no encontrada: " + id));
-        return toResponse(moto);
+        return motoMapper.toDto(moto);
     }
 
     public MotoResponse crear(MotoRequest request) {
@@ -55,7 +60,7 @@ public class MotoService {
                 .estado(request.estado() != null ? request.estado() : "disponible")
                 .build();
 
-        return toResponse(motoRepository.save(moto));
+        return motoMapper.toDto(motoRepository.save(moto));
     }
 
     public MotoResponse actualizar(Long id, MotoRequest request) {
@@ -78,7 +83,7 @@ public class MotoService {
         moto.setImagenUrl(request.imagenUrl());
         if (request.estado() != null) moto.setEstado(request.estado());
 
-        return toResponse(motoRepository.save(moto));
+        return motoMapper.toDto(motoRepository.save(moto));
     }
 
     public void eliminar(Long id) {
@@ -86,23 +91,5 @@ public class MotoService {
             throw new ResourceNotFoundException("Moto no encontrada: " + id);
         }
         motoRepository.deleteById(id);
-    }
-
-    private MotoResponse toResponse(Moto moto) {
-        return new MotoResponse(
-                moto.getIdMoto(),
-                moto.getDistribuidor().getNombre(),
-                moto.getDistribuidor().getIdDistribuidor(),
-                moto.getMarca(),
-                moto.getModelo(),
-                moto.getAño(),
-                moto.getTipo(),
-                moto.getCilindradaCc(),
-                moto.getPrecioImportacion(),
-                moto.getPrecioVenta(),
-                moto.getStock(),
-                moto.getColor(),
-                moto.getImagenUrl(),
-                moto.getEstado());
     }
 }

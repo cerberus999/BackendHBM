@@ -48,6 +48,7 @@ secrets.*
 *.p12
 *.pfx
 *.jks
+*.sql
 
 ### application secrets (use local override instead) ###
 /src/main/resources/application.properties

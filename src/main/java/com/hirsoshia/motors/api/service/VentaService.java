@@ -3,6 +3,7 @@ package com.hirsoshia.motors.api.service;
 import com.hirsoshia.motors.api.dto.request.VentaRequest;
 import com.hirsoshia.motors.api.dto.response.VentaResponse;
 import com.hirsoshia.motors.api.exception.ResourceNotFoundException;
+import com.hirsoshia.motors.api.mapper.VentaMapper;
 import com.hirsoshia.motors.api.model.ventas.*;
 import com.hirsoshia.motors.api.repository.ventas.*;
 import org.springframework.stereotype.Service;
@@ -17,29 +18,32 @@ public class VentaService {
     private final ClienteRepository clienteRepository;
     private final GerenteRepository gerenteRepository;
     private final MotoRepository motoRepository;
+    private final VentaMapper ventaMapper;
 
     public VentaService(VentaRepository ventaRepository,
                         ClienteRepository clienteRepository,
                         GerenteRepository gerenteRepository,
-                        MotoRepository motoRepository) {
+                        MotoRepository motoRepository,
+                        VentaMapper ventaMapper) {
         this.ventaRepository = ventaRepository;
         this.clienteRepository = clienteRepository;
         this.gerenteRepository = gerenteRepository;
         this.motoRepository = motoRepository;
+        this.ventaMapper = ventaMapper;
     }
 
     public List<VentaResponse> listarTodas() {
-        return ventaRepository.findAll().stream().map(this::toResponse).toList();
+        return ventaRepository.findAll().stream().map(ventaMapper::toDto).toList();
     }
 
     public List<VentaResponse> listarPorCliente(Long clienteId) {
-        return ventaRepository.findByClienteIdCliente(clienteId).stream().map(this::toResponse).toList();
+        return ventaRepository.findByClienteIdCliente(clienteId).stream().map(ventaMapper::toDto).toList();
     }
 
     public VentaResponse obtenerPorId(Long id) {
         Venta venta = ventaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada: " + id));
-        return toResponse(venta);
+        return ventaMapper.toDto(venta);
     }
 
     @Transactional
@@ -68,7 +72,7 @@ public class VentaService {
                 .notas(request.notas())
                 .build();
 
-        return toResponse(ventaRepository.save(venta));
+        return ventaMapper.toDto(ventaRepository.save(venta));
     }
 
     @Transactional
@@ -81,21 +85,5 @@ public class VentaService {
         motoRepository.save(moto);
 
         ventaRepository.delete(venta);
-    }
-
-    private VentaResponse toResponse(Venta venta) {
-        return new VentaResponse(
-                venta.getIdVenta(),
-                venta.getCliente().getIdCliente(),
-                venta.getCliente().getNombre() + " " + venta.getCliente().getApellido(),
-                venta.getGerente().getIdGerente(),
-                venta.getGerente().getNombre() + " " + venta.getGerente().getApellido(),
-                venta.getMoto().getIdMoto(),
-                venta.getMoto().getMarca() + " " + venta.getMoto().getModelo(),
-                venta.getFechaVenta(),
-                venta.getPrecioFinal(),
-                venta.getDescuentoAplicado(),
-                venta.getMetodoPago(),
-                venta.getNotas());
     }
 }
