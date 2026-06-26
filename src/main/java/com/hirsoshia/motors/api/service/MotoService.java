@@ -8,8 +8,10 @@ import com.hirsoshia.motors.api.model.ventas.Distribuidor;
 import com.hirsoshia.motors.api.model.ventas.Moto;
 import com.hirsoshia.motors.api.repository.ventas.DistribuidorRepository;
 import com.hirsoshia.motors.api.repository.ventas.MotoRepository;
+import com.hirsoshia.motors.api.specification.MotoSpecification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -33,6 +35,12 @@ public class MotoService {
 
     public List<MotoResponse> listarDisponibles() {
         return motoRepository.findByEstado("disponible").stream().map(motoMapper::toDto).toList();
+    }
+
+    public List<MotoResponse> buscar(String marca, String modelo, String tipo,
+                                      BigDecimal precioMin, BigDecimal precioMax) {
+        return motoRepository.findAll(MotoSpecification.conFiltros(marca, modelo, tipo, precioMin, precioMax))
+                .stream().map(motoMapper::toDto).toList();
     }
 
     public MotoResponse obtenerPorId(Long id) {

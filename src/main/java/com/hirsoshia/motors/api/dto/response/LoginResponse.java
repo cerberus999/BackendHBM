@@ -5,5 +5,7 @@ public record LoginResponse(
         String tipo,
         String username,
         String rol,
-        Long idUsuario
+        Long idUsuario,
+        Long idGerente,
+        Long idCliente
 ) {}

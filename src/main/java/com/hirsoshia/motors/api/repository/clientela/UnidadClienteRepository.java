@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface UnidadClienteRepository extends JpaRepository<UnidadCliente, Long> {
     List<UnidadCliente> findByIdClienteRef(Long idClienteRef);
+    java.util.Optional<UnidadCliente> findByIdVentaRef(Long idVentaRef);
 }

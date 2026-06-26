@@ -40,16 +40,20 @@ public class AuthService {
 
         String token = jwtTokenProvider.generateToken(usuario.getUsername(), usuario.getRol(), usuario.getIdUsuario());
 
-        return new LoginResponse(token, "Bearer", usuario.getUsername(), usuario.getRol(), usuario.getIdUsuario());
+        return new LoginResponse(token, "Bearer", usuario.getUsername(), usuario.getRol(), usuario.getIdUsuario(), usuario.getIdGerente(), usuario.getIdCliente());
     }
 
-    public void register(RegisterRequest request) {
-        if (usuarioRepository.existsByUsername(request.username())) {
-            throw new BadRequestException("El username ya existe");
-        }
-
+    public boolean register(RegisterRequest request) {
         if (!request.rol().equals("admin") && !request.rol().equals("cliente")) {
             throw new BadRequestException("Rol inválido: debe ser admin o cliente");
+        }
+
+        if (usuarioRepository.existsByUsername(request.username())) {
+            return false;
+        }
+
+        if (request.idCliente() != null && usuarioRepository.findByIdCliente(request.idCliente()).isPresent()) {
+            return false;
         }
 
         Usuario usuario = Usuario.builder()
@@ -62,5 +66,6 @@ public class AuthService {
                 .build();
 
         usuarioRepository.save(usuario);
+        return true;
     }
 }
