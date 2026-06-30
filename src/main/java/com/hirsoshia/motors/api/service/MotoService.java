@@ -66,6 +66,36 @@ public class MotoService {
                 .color(request.color())
                 .imagenUrl(request.imagenUrl())
                 .estado(request.estado() != null ? request.estado() : "disponible")
+                .refrigeracion(request.refrigeracion())
+                .potenciaCv(request.potenciaCv())
+                .potenciaRpm(request.potenciaRpm())
+                .torqueNm(request.torqueNm())
+                .torqueRpm(request.torqueRpm())
+                .alimentacion(request.alimentacion())
+                .transmision(request.transmision())
+                .velocidadMaxKmh(request.velocidadMaxKmh())
+                .diametroCarrera(request.diametroCarrera())
+                .relacionCompresion(request.relacionCompresion())
+                .potenciaRamAirCv(request.potenciaRamAirCv())
+                .arranque(request.arranque())
+                .chasisTipo(request.chasisTipo())
+                .suspensionDelantera(request.suspensionDelantera())
+                .suspensionTrasera(request.suspensionTrasera())
+                .amortiguadorDireccion(request.amortiguadorDireccion())
+                .frenoDelantero(request.frenoDelantero())
+                .frenoTrasero(request.frenoTrasero())
+                .frenoAsistencia(request.frenoAsistencia())
+                .neumaticoDelantero(request.neumaticoDelantero())
+                .neumaticoTrasero(request.neumaticoTrasero())
+                .pesoKg(request.pesoKg())
+                .pesoSecoKg(request.pesoSecoKg())
+                .pesoMarchaKg(request.pesoMarchaKg())
+                .depositoLitros(request.depositoLitros())
+                .alturaAsientoMm(request.alturaAsientoMm())
+                .distanciaEjesMm(request.distanciaEjesMm())
+                .distanciaSueloMm(request.distanciaSueloMm())
+                .maleteroLitros(request.maleteroLitros())
+                .electronica(request.electronica())
                 .build();
 
         return motoMapper.toDto(motoRepository.save(moto));
@@ -90,6 +120,36 @@ public class MotoService {
         moto.setColor(request.color());
         moto.setImagenUrl(request.imagenUrl());
         if (request.estado() != null) moto.setEstado(request.estado());
+        if (request.refrigeracion() != null) moto.setRefrigeracion(request.refrigeracion());
+        if (request.potenciaCv() != null) moto.setPotenciaCv(request.potenciaCv());
+        if (request.potenciaRpm() != null) moto.setPotenciaRpm(request.potenciaRpm());
+        if (request.torqueNm() != null) moto.setTorqueNm(request.torqueNm());
+        if (request.torqueRpm() != null) moto.setTorqueRpm(request.torqueRpm());
+        if (request.alimentacion() != null) moto.setAlimentacion(request.alimentacion());
+        if (request.transmision() != null) moto.setTransmision(request.transmision());
+        if (request.velocidadMaxKmh() != null) moto.setVelocidadMaxKmh(request.velocidadMaxKmh());
+        if (request.diametroCarrera() != null) moto.setDiametroCarrera(request.diametroCarrera());
+        if (request.relacionCompresion() != null) moto.setRelacionCompresion(request.relacionCompresion());
+        if (request.potenciaRamAirCv() != null) moto.setPotenciaRamAirCv(request.potenciaRamAirCv());
+        if (request.arranque() != null) moto.setArranque(request.arranque());
+        if (request.chasisTipo() != null) moto.setChasisTipo(request.chasisTipo());
+        if (request.suspensionDelantera() != null) moto.setSuspensionDelantera(request.suspensionDelantera());
+        if (request.suspensionTrasera() != null) moto.setSuspensionTrasera(request.suspensionTrasera());
+        if (request.amortiguadorDireccion() != null) moto.setAmortiguadorDireccion(request.amortiguadorDireccion());
+        if (request.frenoDelantero() != null) moto.setFrenoDelantero(request.frenoDelantero());
+        if (request.frenoTrasero() != null) moto.setFrenoTrasero(request.frenoTrasero());
+        if (request.frenoAsistencia() != null) moto.setFrenoAsistencia(request.frenoAsistencia());
+        if (request.neumaticoDelantero() != null) moto.setNeumaticoDelantero(request.neumaticoDelantero());
+        if (request.neumaticoTrasero() != null) moto.setNeumaticoTrasero(request.neumaticoTrasero());
+        if (request.pesoKg() != null) moto.setPesoKg(request.pesoKg());
+        if (request.pesoSecoKg() != null) moto.setPesoSecoKg(request.pesoSecoKg());
+        if (request.pesoMarchaKg() != null) moto.setPesoMarchaKg(request.pesoMarchaKg());
+        if (request.depositoLitros() != null) moto.setDepositoLitros(request.depositoLitros());
+        if (request.alturaAsientoMm() != null) moto.setAlturaAsientoMm(request.alturaAsientoMm());
+        if (request.distanciaEjesMm() != null) moto.setDistanciaEjesMm(request.distanciaEjesMm());
+        if (request.distanciaSueloMm() != null) moto.setDistanciaSueloMm(request.distanciaSueloMm());
+        if (request.maleteroLitros() != null) moto.setMaleteroLitros(request.maleteroLitros());
+        if (request.electronica() != null) moto.setElectronica(request.electronica());
 
         return motoMapper.toDto(motoRepository.save(moto));
     }
